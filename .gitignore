@@ -1,0 +1,34 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dataset
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/evaluation/*
+!data/evaluation/.gitkeep
+
+# Trained models
+models/*.joblib
+models/embedding_model/
+
+# Vector database
+vector_db/
+
+# Generated reports
+reports/model_evaluation/*
+reports/root_cause_reports/*
+
+# System
+.DS_Store
+Thumbs.db

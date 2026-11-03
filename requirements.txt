@@ -1,0 +1,46 @@
+# Data Processing
+pandas
+numpy
+
+# Machine Learning
+scikit-learn
+joblib
+imbalanced-learn
+
+# NLP
+nltk
+spacy
+transformers
+sentence-transformers
+torch
+
+# Embeddings and Clustering
+umap-learn
+hdbscan
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# Web Application
+streamlit
+streamlit-option-menu
+
+# Google Gemini, Multi-Agent, and RAG
+google-genai
+langgraph
+langchain
+langchain-community
+chromadb
+groq
+
+# API and Environment
+requests
+python-dotenv
+pydantic
+
+# Utilities
+tqdm
+psutil
+pytest

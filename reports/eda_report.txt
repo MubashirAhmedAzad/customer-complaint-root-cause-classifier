@@ -1,0 +1,40 @@
+CUSTOMER COMPLAINT DATASET - EDA REPORT
+=======================================================
+
+Total records: 100000
+Unique complaint IDs: 100000
+Duplicate IDs: 0
+Unique narratives: 71201
+Missing values: 0
+
+TOP 10 ISSUES
+issue
+Fees                        11873
+Payments                    11602
+Account management           8974
+Credit reporting             7938
+Billing dispute              7923
+Account access               6523
+Fraud or scam                6360
+Collection practices         5559
+Deposits and withdrawals     4431
+Communication                4040
+Name: count, dtype: int64
+
+SENTIMENT DISTRIBUTION
+sentiment_label
+Negative    64116
+Neutral     23981
+Positive    11903
+Name: count, dtype: int64
+
+RESOLUTION STATUS
+resolution_status
+Resolved                   40400
+In review                  27060
+Unresolved                 16726
+Closed with explanation    15814
+Name: count, dtype: int64
+
+DATE RANGE
+2023-01-01 00:00:00 to 2025-12-31 00:00:00
