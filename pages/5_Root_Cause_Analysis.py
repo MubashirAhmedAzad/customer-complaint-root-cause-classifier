@@ -80,7 +80,17 @@ else:
         f"{r['pattern_id']} — {r.get('sub_issue', 'General')} ({r.get('company', 'All')})"
         for r in loaded_reports
     ]
-    selected_idx = st.selectbox("Select Investigation Report to Inspect:", range(len(pattern_options)), format_func=lambda i: pattern_options[i])
+    def format_pattern_idx(idx):
+        if isinstance(idx, int) and 0 <= idx < len(pattern_options):
+            return pattern_options[idx]
+        return str(idx)
+
+    selected_idx = st.selectbox("Select Investigation Report to Inspect:", range(len(pattern_options)), format_func=format_pattern_idx)
+    if isinstance(selected_idx, str):
+        try:
+            selected_idx = pattern_options.index(selected_idx)
+        except ValueError:
+            selected_idx = 0
     selected_report = loaded_reports[selected_idx]
 
     # Report details in 2 columns

@@ -133,10 +133,20 @@ else:
     cluster_choice = st.selectbox(
         "Select Cluster to view representative verbatim complaints:",
         sorted([c for c in clustered_df["cluster_id"].unique() if c != -1]),
-        format_func=lambda c: f"Cluster {c} — {topics_df[topics_df['cluster_id']==c]['dominant_issue'].iloc[0] if not topics_df[topics_df['cluster_id']==c].empty else 'N/A'}"
+        format_func=lambda c: (
+            str(c) if isinstance(c, str) and c.startswith("Cluster ")
+            else f"Cluster {c} — {topics_df[topics_df['cluster_id']==c]['dominant_issue'].iloc[0] if not topics_df[topics_df['cluster_id']==c].empty else 'N/A'}"
+        )
     )
 
-    sample_cluster_records = clustered_df[clustered_df["cluster_id"] == cluster_choice].head(4)
+    if isinstance(cluster_choice, str) and cluster_choice.startswith("Cluster "):
+        try:
+            cid = int(cluster_choice.split("—")[0].replace("Cluster", "").strip())
+        except Exception:
+            cid = cluster_choice
+    else:
+        cid = cluster_choice
+    sample_cluster_records = clustered_df[clustered_df["cluster_id"] == cid].head(4)
     for _, r in sample_cluster_records.iterrows():
         with st.container(border=True):
             st.markdown(f"**[{r['complaint_id']}]** | *{r['company']}* — `{r['issue']}` ({r['sub_issue']})")
