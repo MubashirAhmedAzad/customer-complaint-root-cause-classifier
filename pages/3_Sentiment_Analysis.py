@@ -51,15 +51,25 @@ sample_texts = {
     "Constructive / Positive": "The ATM transaction did not match the cash received. The issue may already be improving, but I need confirmation.",
 }
 
+if "sentiment_input_text" not in st.session_state:
+    st.session_state["sentiment_input_text"] = ""
+
+def set_sentiment_sample(sample_text: str):
+    st.session_state["sentiment_input_text"] = sample_text
+
 cols = st.columns(3)
-selected_prompt = None
 for i, (label, text) in enumerate(sample_texts.items()):
-    if cols[i].button(label, key=f"sent_btn_{i}"):
-        selected_prompt = text
+    cols[i].button(
+        label,
+        key=f"sent_btn_{i}",
+        on_click=set_sentiment_sample,
+        args=(text,),
+        use_container_width=True,
+    )
 
 input_narrative = st.text_area(
     "Enter complaint text for sentiment evaluation:",
-    value=selected_prompt if selected_prompt else "",
+    key="sentiment_input_text",
     height=110,
     placeholder="Type or paste complaint text here...",
 )

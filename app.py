@@ -130,10 +130,27 @@ sample_options = [
     "Someone opened an unauthorized account in my name and my credit score dropped.",
 ]
 
-selected_sample = st.selectbox("Or choose a pre-filled complaint template:", ["-- Custom Input --"] + sample_options)
+if "app_complaint_text" not in st.session_state:
+    st.session_state["app_complaint_text"] = ""
 
-default_text = "" if selected_sample == "-- Custom Input --" else selected_sample
-user_text = st.text_area("Customer Complaint Narrative:", value=default_text, height=100)
+def on_sample_change():
+    selected = st.session_state.get("app_sample_choice", "-- Custom Input --")
+    if selected != "-- Custom Input --":
+        st.session_state["app_complaint_text"] = selected
+
+selected_sample = st.selectbox(
+    "Or choose a pre-filled complaint template:",
+    ["-- Custom Input --"] + sample_options,
+    key="app_sample_choice",
+    on_change=on_sample_change,
+)
+
+user_text = st.text_area(
+    "Customer Complaint Narrative:",
+    key="app_complaint_text",
+    height=100,
+    placeholder="Type or paste unstructured customer complaint text here...",
+)
 
 if st.button("🚀 Analyze Complaint", type="primary"):
     if user_text.strip():

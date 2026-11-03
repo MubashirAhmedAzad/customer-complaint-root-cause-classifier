@@ -45,7 +45,7 @@ tab_single, tab_batch = st.tabs(["⚡ Single Complaint Classification", "📁 Ba
 with tab_single:
     st.subheader("Classify Real-Time Narrative")
 
-    # Sample prompt buttons
+    # Sample prompt buttons with session state persistence
     st.markdown("##### Quick Test Examples:")
     samples = {
         "Duplicate Charge": "I am concerned because I was charged twice for one transaction on my credit card statement since my last payment.",
@@ -55,15 +55,25 @@ with tab_single:
         "Payoff Delay": "I requested a payoff quote for my vehicle lease but customer service has delayed sending the documentation.",
     }
 
+    if "classify_input_text" not in st.session_state:
+        st.session_state["classify_input_text"] = ""
+
+    def set_classify_sample(sample_text: str):
+        st.session_state["classify_input_text"] = sample_text
+
     cols = st.columns(len(samples))
-    chosen_sample = None
     for i, (name, text) in enumerate(samples.items()):
-        if cols[i].button(name, key=f"sbtn_{i}"):
-            chosen_sample = text
+        cols[i].button(
+            name,
+            key=f"sbtn_{i}",
+            on_click=set_classify_sample,
+            args=(text,),
+            use_container_width=True,
+        )
 
     input_text = st.text_area(
         "Enter customer complaint narrative:",
-        value=chosen_sample if chosen_sample else "",
+        key="classify_input_text",
         height=130,
         placeholder="Type or paste unstructured customer complaint text here...",
     )

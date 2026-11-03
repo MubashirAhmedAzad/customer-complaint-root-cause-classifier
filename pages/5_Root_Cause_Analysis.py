@@ -53,7 +53,7 @@ with col_btn1:
         with st.spinner("Scanning 100,000 complaints for anomalies & generating reports..."):
             reports = run_full_investigation_pipeline(max_patterns=6)
             st.success(f"Generated {len(reports)} fresh investigation reports!")
-            report_files = list(REPORTS_PATH.glob("*.json"))
+            st.rerun()
 
 if not report_files:
     st.info("No investigation reports found yet. Click **Run Pattern Discovery** above to analyze.")
