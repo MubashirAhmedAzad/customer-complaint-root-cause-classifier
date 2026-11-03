@@ -151,7 +151,7 @@ with tab_batch:
         st.write(f"Loaded file with {len(batch_df):,} rows and columns: {list(batch_df.columns)}")
 
         # Select narrative column
-        narr_candidates = [c for c in batch_df.columns if "narrative" in c.lower() or "text" in c.lower() or "complaint" in c.lower()]
+        narr_candidates = [c for c in batch_df.columns if ("narrative" in c.lower() or "text" in c.lower() or "desc" in c.lower()) and "id" not in c.lower()] or [c for c in batch_df.columns if "complaint" in c.lower() and "id" not in c.lower()]
         default_col = narr_candidates[0] if narr_candidates else batch_df.columns[0]
         text_column = st.selectbox("Select Complaint Text Column:", batch_df.columns, index=batch_df.columns.get_loc(default_col))
 

@@ -126,6 +126,33 @@ def add_documents_in_batches(
     logger.info("ChromaDB collection now contains %d records.", collection.count())
 
 
+def _format_chroma_where(where_filter: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """Format arbitrary dictionary filter into ChromaDB-compatible filter expression.
+
+    ChromaDB requires:
+    - Single field: {"field": {"$eq": value}}
+    - Multiple fields: {"$and": [{"field1": {"$eq": val1}}, {"field2": {"$eq": val2}}]}
+    """
+    if not where_filter:
+        return None
+    # Already formatted with logical operators
+    if any(k.startswith("$") for k in where_filter.keys()):
+        return where_filter
+
+    clauses = []
+    for k, v in where_filter.items():
+        if isinstance(v, dict):
+            clauses.append({k: v})
+        else:
+            clauses.append({k: {"$eq": v}})
+
+    if len(clauses) == 0:
+        return None
+    if len(clauses) == 1:
+        return clauses[0]
+    return {"$and": clauses}
+
+
 def search_vector_store(
     query_text: str,
     n_results: int = 5,
@@ -154,9 +181,20 @@ def search_vector_store(
         "n_results": n_results,
     }
     if where_filter:
-        kwargs["where"] = where_filter
+        formatted_where = _format_chroma_where(where_filter)
+        if formatted_where:
+            kwargs["where"] = formatted_where
 
-    results = collection.query(**kwargs)
+    try:
+        results = collection.query(**kwargs)
+    except Exception as e:
+        logger.warning("ChromaDB query with filter failed (%s). Retrying without filter...", e)
+        kwargs.pop("where", None)
+        try:
+            results = collection.query(**kwargs)
+        except Exception as e2:
+            logger.error("ChromaDB fallback query failed: %s", e2)
+            results = None
 
     parsed_results = []
     if results and "documents" in results and results["documents"]:

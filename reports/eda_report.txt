@@ -1,40 +1,51 @@
-CUSTOMER COMPLAINT DATASET - EDA REPORT
-=======================================================
+======================================================================
+EXPLORATORY DATA ANALYSIS — SUMMARY REPORT
+======================================================================
+Dataset: data/raw/customer_complaints.csv
+Generated: Synthetic dataset
 
-Total records: 100000
-Unique complaint IDs: 100000
-Duplicate IDs: 0
-Unique narratives: 71201
-Missing values: 0
+--- DIMENSIONS ---
+Total rows:               100,000
+Total columns:            16
+Missing values:           0 (all columns complete)
+Duplicate complaint IDs:  0
 
-TOP 10 ISSUES
-issue
-Fees                        11873
-Payments                    11602
-Account management           8974
-Credit reporting             7938
-Billing dispute              7923
-Account access               6523
-Fraud or scam                6360
-Collection practices         5559
-Deposits and withdrawals     4431
-Communication                4040
-Name: count, dtype: int64
+--- NARRATIVE QUALITY ---
+Unique narratives:        71,201 / 100,000
+Exact duplicate narratives: 28,799 (28.8%)
+Character length range:   202 – 303 (mean 252)
+Template structure:       Heavy — most narratives follow fill-in-the-blank patterns
 
-SENTIMENT DISTRIBUTION
-sentiment_label
-Negative    64116
-Neutral     23981
-Positive    11903
-Name: count, dtype: int64
+--- CATEGORIES ---
+Products:                 8
+Issues:                   21
+Sub-issues:               38
+Companies:                8 (uniformly distributed — synthetic artifact)
 
-RESOLUTION STATUS
-resolution_status
-Resolved                   40400
-In review                  27060
-Unresolved                 16726
-Closed with explanation    15814
-Name: count, dtype: int64
+--- SENTIMENT ---
+Negative:                 64,116 (64.1%)
+Neutral:                  23,981 (24.0%)
+Positive:                 11,903 (11.9%)
+Class imbalance:          Moderate (Negative-dominant)
 
-DATE RANGE
-2023-01-01 00:00:00 to 2025-12-31 00:00:00
+--- DATE RANGE ---
+From:                     2023-01-01
+To:                       2025-12-31
+
+--- KEY OBSERVATIONS ---
+1. No missing data — complete synthetic generation.
+2. 28.8% exact-duplicate narratives — must group or deduplicate before train/test split.
+3. Narratives are template-based with shared filler sentences.
+4. Very narrow narrative length (std=13.7 chars) — unrealistic for real data.
+5. Sentiment is imbalanced (64% Negative) — use stratified splits.
+6. 'Unresolved' complaints have zero Positive sentiment — strong synthetic signal.
+7. Companies are uniformly distributed — unlike real-world patterns.
+8. Sentiment ratios are consistent across issues — likely generated independently.
+
+--- RECOMMENDATIONS FOR NEXT PHASES ---
+1. Use GroupKFold or narrative-hash grouping to prevent data leakage from duplicate texts.
+2. Report all classification metrics as 'synthetic-data performance'.
+3. Consider deduplicating narratives before embedding generation to save compute.
+4. Be cautious about resolution_status as a feature — it leaks sentiment information.
+5. Use stratified sampling for sentiment classification given class imbalance.
+======================================================================
